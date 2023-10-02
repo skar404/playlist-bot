@@ -1,4 +1,4 @@
-FROM python:3.10.8-buster
+FROM python:3.11-buster
 
 WORKDIR app/
 
@@ -14,8 +14,6 @@ RUN poetry config virtualenvs.create false && \
 
 # copy code
 COPY ./src .
-
-EXPOSE 8000
 
 USER 1001
 ENTRYPOINT []

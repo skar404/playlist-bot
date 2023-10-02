@@ -107,6 +107,8 @@ async def c_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         f'Hello {update.effective_user.first_name}'
         f'\nThis bot create playlist from your audio'
         f'\nsend audio for me and them send /create'
+        f'\nauthor: @denis_malin and source code:'
+        f'\nhttps://github.com/skar404/playlist-bot'
     )
 
 
