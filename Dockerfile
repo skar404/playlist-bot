@@ -15,6 +15,5 @@ RUN poetry config virtualenvs.create false && \
 # copy code
 COPY ./src .
 
-USER 1001
 ENTRYPOINT []
 CMD ["python", "."]
