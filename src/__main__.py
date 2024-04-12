@@ -138,6 +138,11 @@ async def add_audio(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user.add_audio(update.message.audio.file_id)
 
 
+def chunks(array, n):
+    for i in range(0, len(array), n):
+        yield array[i:i + n]
+
+
 async def create_playlist(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     autor_id = update.effective_user.id
     user = UserDB(autor_id).get_user()
@@ -151,12 +156,13 @@ async def create_playlist(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         )
         return
 
-    await context.bot.send_media_group(
-        chat_id=update.message.chat_id,
-        media=[InputMediaAudio(
-            media=audio
-        ) for audio in user.playlist]
-    )
+    for chunk in chunks(list(user.playlist), 10):
+        await context.bot.send_media_group(
+            chat_id=update.message.chat_id,
+            media=[InputMediaAudio(
+                media=audio
+            ) for audio in chunk]
+        )
 
     user.clean_user()
 
@@ -164,7 +170,6 @@ async def create_playlist(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 cursor = duckdb.connect(
     ":memory:",
 )
-
 
 print('stage load db')
 cursor.execute(f"""
