@@ -8,11 +8,9 @@ I use duckdb for store user data
 I don't shore that this is good idea, but i try it
 """
 import json
+from typing import List
 
 import duckdb
-
-from typing import Set
-
 from pydantic.v1 import BaseSettings
 from telegram import Update, InputMediaAudio
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
@@ -37,7 +35,7 @@ settings = Settings()
 class UserDB:
     user_id: int
     is_create_playlist: bool
-    playlist: Set[str]
+    playlist: List[str]
 
     def __init__(self, user_id):
         self.user_id = user_id
@@ -57,12 +55,12 @@ class UserDB:
         ).fetchone()
         self.user_id = res_raw[0]
         self.is_create_playlist = res_raw[1]
-        self.playlist = res_raw[2] and set(json.loads(res_raw[2])) or set()
+        self.playlist = res_raw[2] and json.loads(res_raw[2]) or []
         return self
 
     def add_audio(self, audio_id):
         self.get_user()
-        self.playlist.add(audio_id)
+        self.playlist.append(audio_id)
         self.create_playlist()
         cursor.execute(
             """
